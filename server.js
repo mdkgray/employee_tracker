@@ -1,14 +1,17 @@
+const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 
 require('console.table');
 require('dotenv').config();
 
+const PORT = process.env.PORT || 3001;
+const app = express();
+
 // link to database with mysql connection
 const db = mysql.createConnection(
     {
         host: 'localhost',
-        port: 3001,
         user: 'root',
         password: '1111',
         database: 'employee_tracker_db'
@@ -22,6 +25,7 @@ const db = mysql.createConnection(
 db.connect(function (err) {
     if (err) throw err;
     console.log(`Connected to the employee_tracker_db database`)
+    console.log(`-----------------------------`)
     startQuestion();
 });
 
@@ -43,8 +47,8 @@ function startQuestion() {
             'Quit'
         ],
     }).then(answers => {
-        console.log(answers.choice);
-        switch (answers.choice) {
+        // console.log(answers.choices);
+        switch (answers.choices) {
             case 'View all employees':
                 viewAllEmployees();
                 break;
@@ -74,8 +78,13 @@ function startQuestion() {
 };
 
 
-// function for view employees
-
+// function for view all employees
+function viewAllEmployees() {
+    db.query('SELECT * from employee', function(err, results) {
+        console.table(results);
+        startQuestion();
+    })
+};
 
 // function to add employees 
 
@@ -84,13 +93,23 @@ function startQuestion() {
 
 
 //function to view all roles
-
+function viewAllRoles() {
+    db.query('SELECT * from role', function(err, results) {
+        console.table(results);
+        startQuestion();
+    })
+};
 
 //function to add role 
 
 
 //function to view all departments 
-
+function viewAllDepartments() {
+    db.query('SELECT * from department', function(err, results) {
+        console.table(results);
+        startQuestion();
+    })
+};
 
 //function to add department 
 
@@ -99,3 +118,9 @@ function startQuestion() {
 
 // function to delete departments, roles, and employees.
 
+
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+  
