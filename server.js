@@ -14,14 +14,10 @@ const app = express();
 // mysql database connection
 const db = mysql.createConnection(
     {
-        host: 'localhost',
-        user: 'root',
-        password: '1111',
-        database: 'employee_tracker_db'
-
-        // process.env.DB_NAME,
-        // process.env.DB_USER, 
-        // process.env.DB_PASSWORD,
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER, 
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
     },
 );
 
@@ -80,7 +76,6 @@ function startQuestion() {
     });
 };
 
-
 // function for view all employees
 function viewAllEmployees() {
     db.query('SELECT * from employee', function(err, results) {
@@ -95,7 +90,7 @@ function viewAllEmployees() {
 //function to update employee role 
 
 
-//function to view all roles
+// function to view all roles
 function viewAllRoles() {
     db.query('SELECT * from role', function(err, results) {
         console.table(results);
@@ -103,10 +98,10 @@ function viewAllRoles() {
     })
 };
 
-//function to add role 
+// function to add role 
 
 
-//function to view all departments 
+// function to view all departments 
 function viewAllDepartments() {
     db.query('SELECT * from department', function(err, results) {
         console.table(results);
@@ -114,7 +109,7 @@ function viewAllDepartments() {
     })
 };
 
-//function to add department 
+// function to add department 
 
 
 // BONUS functions
@@ -122,8 +117,23 @@ function viewAllDepartments() {
 // function to delete departments, roles, and employees.
 
 
-
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
   
+
+
+// have this in a separate db.js file
+
+    // viewRoles(){
+    //     return Connection.promise().query(`SELECT * FROM roles`);
+    // }
+
+
+// have this in the server.js file and call from db.js file
+
+    // viewRoles(
+
+    // ).then((roles)=> {
+
+    // }))
