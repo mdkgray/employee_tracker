@@ -1,25 +1,25 @@
 INSERT INTO department (id, name)
-VALUES  (1, 'Sales'),
-        (2, 'Engineering'),
-        (3, 'Finace'),
-        (4, 'Legal');
+VALUES  ('Sales'),
+        ('Engineering'),
+        ('Finace'),
+        ('Legal');
 
 INSERT INTO role (id, title, salary, department_id)
-VALUES  (1, 'Salesperson', 80000, 1),
-        (2, 'Sales Lead', 100000, 1),
-        (3, 'Lead Engineer', 170000, 2),
-        (4, 'Software Engineer', 130000, 2),
-        (5, 'Account Manager', 150000, 3),
-        (6, 'Accountant', 120000, 3),
-        (7, 'Leagal Team Lead', 250000, 4),
-        (8, 'Lawyer', 190000, 4);
+VALUES  (10, 'Salesperson', 80000, 1),
+        (20, 'Sales Lead', 100000, 1),
+        (30, 'Lead Engineer', 170000, 2),
+        (40, 'Software Engineer', 130000, 2),
+        (50, 'Account Manager', 150000, 3),
+        (60, 'Accountant', 120000, 3),
+        (70, 'Leagal Team Lead', 250000, 4),
+        (80, 'Lawyer', 190000, 4);
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
-VALUES  (1, 'Mark', 'Smith', 2, null),
-        (2, 'John', 'Doe', 1, 2),
-        (3, 'Jane', 'Burns', 3, null),
-        (4, 'Samantha', 'Jean', 5, null),
-        (5, 'Rob', 'Mills', 4, 3),
-        (6, 'Hank', 'Stevens', 6, 5), 
-        (7, 'Sarah', 'Wells', 8, 7),
-        (8, 'Mike', 'Horne', 7, null);
+VALUES  ('Mark', 'Smith', 20, null),
+        ('John', 'Doe', 10, 2),
+        ('Jane', 'Burns', 30, null),
+        ('Samantha', 'Jean', 50, null),
+        ('Rob', 'Mills', 40, 3),
+        ('Hank', 'Stevens', 60, 5), 
+        ('Sarah', 'Wells', 80, 7),
+        ('Mike', 'Horne', 70, null);
