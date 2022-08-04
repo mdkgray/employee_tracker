@@ -1,14 +1,17 @@
+//require for mysql, express and inquirer
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 
+// require for console.table and dotenv
 require('console.table');
 require('dotenv').config();
 
+//PORT connection
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-// link to database with mysql connection
+// mysql database connection
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -25,11 +28,11 @@ const db = mysql.createConnection(
 db.connect(function (err) {
     if (err) throw err;
     console.log(`Connected to the employee_tracker_db database`)
-    console.log(`-----------------------------`)
+    console.log(`---------------------------------------------`)
     startQuestion();
 });
 
-// inquirer question to start application
+// inquirer question to begin application
 function startQuestion() {
     inquirer.prompt({
         message: 'What would you like to do?',
@@ -122,5 +125,5 @@ function viewAllDepartments() {
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-  });
+});
   
