@@ -1,7 +1,7 @@
-//require for mysql, express and inquirer
 const express = require('express');
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
+// const mysql = require('mysql2');
+const db = require('./connection/connection');
 
 // require for console.table and dotenv
 require('console.table');
@@ -10,16 +10,6 @@ require('dotenv').config();
 //PORT connection
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-// mysql database connection
-const db = mysql.createConnection(
-    {
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER, 
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME
-    },
-);
 
 db.connect(function (err) {
     if (err) throw err;
@@ -38,11 +28,14 @@ function startQuestion() {
         [
             'View all employees',
             'Add employee',
+            'Delete employee',
             'Update employee role',
             'View all roles',
             'Add role',
+            'Delete role',
             'View all departments',
             'Add department',
+            'Delete department',
             'Quit'
         ],
     }).then(answers => {
@@ -54,6 +47,9 @@ function startQuestion() {
             case 'Add employee':
                 addEmployee();
                 break;
+            case 'Delete employee':
+                deleteEmployee();
+                break;
             case 'Update employee role':
                 updateEmployeeRole();
                 break;
@@ -63,11 +59,17 @@ function startQuestion() {
             case 'Add role':
                 addRole();
                 break;
+            case 'Delete role':
+                deleteRole();
+                break;
             case 'View all departments':
                 viewAllDepartments();
                 break;
             case 'Add department':
                 addDepartment();
+                break;
+            case 'Delete department':
+                deleteDepartment();
                 break;
             case 'Quit':
                 db.end();

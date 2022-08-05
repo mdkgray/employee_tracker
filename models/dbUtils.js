@@ -1,4 +1,4 @@
-const connection = require('../connection/connection.js');
+const db = require('../connection/connection.js');
 
 class dbQueryUtil {
     constructor (connection) {
@@ -43,4 +43,4 @@ class dbQueryUtil {
     }
 }
 
-module.exports = dbQueryUtil(connection);
+module.exports = dbQueryUtil(db);
