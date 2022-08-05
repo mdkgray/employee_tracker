@@ -43,4 +43,4 @@ class dbQueryUtil {
     }
 }
 
-module.exports = dbQueryUtil(db);
+module.exports = new dbQueryUtil(db);

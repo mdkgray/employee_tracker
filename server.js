@@ -1,7 +1,10 @@
 const express = require('express');
 const inquirer = require('inquirer');
 // const mysql = require('mysql2');
+
 const db = require('./connection/connection');
+const dbUtils = require('./models/dbUtils');
+const dbQueryUtil = require('./models/dbUtils');
 
 // require for console.table and dotenv
 require('console.table');
@@ -11,6 +14,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+// shows user that connection is made and initializes the application
 db.connect(function (err) {
     if (err) throw err;
     console.log(`Connected to the employee_tracker_db database`)
@@ -39,7 +43,6 @@ function startQuestion() {
             'Quit'
         ],
     }).then(answers => {
-        // console.log(answers.choices);
         switch (answers.choices) {
             case 'View all employees':
                 viewAllEmployees();
@@ -80,106 +83,89 @@ function startQuestion() {
 };
 
 // function for view all employees
-function viewAllEmployees() {
-    db.query('SELECT * from employee', function(err, results) {
-        console.table(results);
-        startQuestion();
-    })
+async function viewAllEmployees() {
+    const allEmployees = await dbQueryUtil.viewAllEmployees();
+    console.table(allEmployees);
+    startQuestion();
 };
 
 // function to add employees 
-// function addEmployee() {
-//     inquirer.prompt([
-//         {
-//         message: 'What is the employees first name?',
-//         type: 'input',
-//         name: 'firstName',
-//         },
-//         {
-//         message: 'What is the employees last name?',
-//         type: 'input',
-//         name: 'lastName',
-//         },
-//         {
-//         message: 'What is the employees role?',
-//         type: 'list',
-//         name: 'role',
-//         choices:
-//         [
-//             'Salesperson',
-//             'Sales Lead',
-//             'Lead Engineer',
-//             'Software Engineer',
-//             'Account Manager',
-//             'Accountant',
-//             'Legal Team Lead',
-//             'Lawyer'
-//         ]
-//         },
-//         {
-//         message: 'Who is the employees manager?',
-//         type: 'list',
-//         name: 'manager',
-//         choices:
-//         [
-//             'None',
-//             'Mark Smith',
-//             'John Doe',
-//             'Jane Burns',
-//             'Samantha Jean',
-//             'Rob Mills',
-//             'Hank Stevens',
-//             'Sarah Wells',
-//             'Mike Horne'
-//         ]
-//         },
-//     ]).then(function(res) {
-//         db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [res.firstName, res.lastName, res.role, res.manager], function(err, results) {
-//             if (err) throw err;
-//             console.table('Added new employee');
-//             startQuestion();
-//         });
-//     });
-// };
+async function addEmployee() {
+    const currentRoles = await dbQueryUtil.viewAllRoles();
+    const hasManager = await dbQueryUtil.viewAllEmployees();
 
+    const addNewEmployee = await inquirer.prompt([
+        {
+            message: 'What is the employees first name?',
+            type: 'input',
+            name: 'firstName',
+        },
+        {
+            message: 'What is the employees last name?',
+            type: 'input',
+            name: 'lastName',    
+        },
+    ]);
+
+    const roleChoices = currentRoles.map(({ id, title }) => ({ name: title, value: id }));
+    const { role } = await inquirer.prompt([
+        {
+            message: 'What is the employees role?',
+            type: 'list',
+            name: 'role',
+            choices: roleChoices,    
+        }
+    ]);
+
+    const managerChoices = hasManager.map(({ first_name, last_name, id }) => ({ name: first_name + last_name, value: id }));
+    if (managerChoices && managerChoices.length > 0) {
+        const { manager } = await inquirer.prompt([
+            {
+                message: 'Who is the employees manager?',
+                type: 'list',
+                name: 'manager',
+                choices: managerChoices,         
+            }
+        ]);
+        addNewEmployee.manager_id = manager;
+    }
+    addNewEmployee.role_id = role;
+
+    await dbUtils.createNewEmployee(addNewEmployee); 
+};
 
 //function to update employee role 
 
 
 // function to view all roles
-function viewAllRoles() {
-    db.query('SELECT * from role', function(err, results) {
-        console.table(results);
-        startQuestion();
-    })
+async function viewAllRoles() {
+    const allRoles = await dbQueryUtil.viewAllRoles();
+    console.table(allRoles);
+    startQuestion();
 };
 
 // function to add role 
 
 
 // function to view all departments 
-function viewAllDepartments() {
-    db.query('SELECT * from department', function(err, results) {
-        console.table(results);
-        startQuestion();
-    })
+async function viewAllDepartments() {
+    const allDepartments = await dbQueryUtil.viewAllDepartments();    
+    console.table(allDepartments);
+    startQuestion();
 };
 
 // function to add department 
-// function addDepartment() {
-//     inquirer.prompt([{
-//         message: 'What department do you want to add?',
-//         type: 'input',
-//         name: 'department'
-//     }, ]).then(function(res) {
-//         db.query('INSERT INTO department (name) VALUES (?)', [res.department], function(err, results) {
-//             if (err) throw err;
-//             console.table('Added new department');
-//             startQuestion();
-//         });
-//     });
-// }
-
+async function addDepartment() {
+    const newDepartment = await inquirer.prompt([
+        {
+            message: 'What is the name of the department you want to add?',
+            type: 'input',
+            name: 'name',
+        }
+    ]);
+    await dbQueryUtil.createDepartment(newDepartment);
+    startQuestion();
+};
 
 // BONUS functions
 
@@ -189,20 +175,3 @@ function viewAllDepartments() {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-  
-
-
-// have this in a separate db.js file
-
-    // viewRoles(){
-    //     return db.promise().query(`SELECT * FROM roles`);
-    // }
-
-
-// have this in the server.js file and call from db.js file
-
-    // viewRoles(
-
-    // ).then((roles)=> {
-
-    // }))
