@@ -13,8 +13,8 @@ class dbQueryUtil {
     updateEmployee() {
         return this.connection.query('UPDATE employee SET role_id = role_id WHERE first_name = name');
     }
-    updateEmployeeRole(employeeId, newRoleId) {
-        return this.connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [employeeId, newRoleId]);
+    updateEmployeeRole(employee, role) {
+        return this.connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [employee, role]);
     }
     deleteEmployee(id) {
         return this.connection.query('DELETE from employee WHERE id = ?', [id]);

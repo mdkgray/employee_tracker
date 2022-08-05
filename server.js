@@ -1,6 +1,6 @@
 const express = require('express');
 const inquirer = require('inquirer');
-// const mysql = require('mysql2');
+const mysql = require('mysql2');
 
 const db = require('./connection/connection');
 const dbUtils = require('./models/dbUtils');
@@ -28,8 +28,7 @@ function startQuestion() {
         message: 'What would you like to do?',
         type: 'list',
         name: 'choices',
-        choices: 
-        [
+        choices: [
             'View all employees',
             'Add employee',
             'Delete employee',
@@ -134,7 +133,40 @@ async function addEmployee() {
     await dbUtils.createNewEmployee(addNewEmployee); 
 };
 
+//function to delete employee
+
+
 //function to update employee role 
+async function updateEmployeeRole() {
+    const employeeList = await dbQueryUtil.viewAllEmployees();
+    const employeeRoles = await dbQueryUtil.viewAllRoles();
+    
+    const employeeListOptions = employeeList.map(({ id, first_name, last_name }) => ({ name: first_name + last_name, value: id }));
+
+    const employeeRolesOptions = employeeRoles.map(({ id, title }) => ({ name: title, value: id }));
+
+    const { employee } = await inquirer.prompt([
+        {
+            message: 'Which employee do you want to change role?',
+            type: 'list',
+            name: 'employee',
+            choices: employeeListOptions,
+        },
+    ]);
+
+    const { role } = await inquirer.prompt([
+        {
+            message: 'What role do you want to assign this employee?',
+            type: 'list',
+            name: 'role',
+            choices: employeeRolesOptions,
+        },
+    ]);
+
+    await dbQueryUtil.updateEmployeeRole(employee, role);
+    // add console log message
+    startQuestion();
+}; 
 
 
 // function to view all roles
@@ -170,6 +202,8 @@ async function addRole() {
     await dbQueryUtil.addRole(newRole);
 };
 
+// function to delete role
+
 
 // function to view all departments 
 async function viewAllDepartments() {
@@ -188,12 +222,11 @@ async function addDepartment() {
         }
     ]);
     await dbQueryUtil.createDepartment(newDepartment);
+    console.log(`Added ${answers.name} to the database`);
     startQuestion();
 };
 
-// BONUS functions
-
-// function to delete departments, roles, and employees.
+// function to delete department
 
 
 app.listen(PORT, () => {
