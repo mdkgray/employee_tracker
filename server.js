@@ -83,8 +83,8 @@ function startQuestion() {
 
 // function for view all employees
 async function viewAllEmployees() {
-    const allEmployees = await dbQueryUtil.viewAllEmployees();
-    console.table(allEmployees);
+    const employeeList = await dbQueryUtil.viewAllEmployees();
+    console.table(employeeList);
     startQuestion();
 };
 
@@ -134,7 +134,20 @@ async function addEmployee() {
 };
 
 //function to delete employee
+async function deleteEmployee() {
+    const employeeList = await dbQueryUtil.viewAllEmployees();
+    const employeeListOptions = employeeList.map(({ id, first_name, last_name }) => ({ name: first_name + last_name, value: id }));
 
+    const { employee } = await inquirer.prompt([
+        {
+            message: 'Which employee do you want to delete?',
+            type: 'list',
+            name: 'employee',
+            choices: employeeListOptions,
+        },
+    ]);
+    await dcQueryUtil.deleteEmployee(employee);
+}
 
 //function to update employee role 
 async function updateEmployeeRole() {
@@ -164,10 +177,9 @@ async function updateEmployeeRole() {
     ]);
 
     await dbQueryUtil.updateEmployeeRole(employee, role);
-    // add console log message
+    console.log(`Updated employee's role`);
     startQuestion();
 }; 
-
 
 // function to view all roles
 async function viewAllRoles() {
