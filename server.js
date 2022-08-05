@@ -71,6 +71,7 @@ function startQuestion() {
                 break;
             case 'Quit':
                 db.end();
+                console.log('See you next time');
                 break;
         }
     });
@@ -85,6 +86,59 @@ function viewAllEmployees() {
 };
 
 // function to add employees 
+function addEmployee() {
+    inquirer.prompt([
+        {
+        message: 'What is the employees first name?',
+        type: 'input',
+        name: 'firstName',
+        },
+        {
+        message: 'What is the employees last name?',
+        type: 'input',
+        name: 'lastName',
+        },
+        {
+        message: 'What is the employees role?',
+        type: 'list',
+        name: 'role',
+        choices:
+        [
+            'Salesperson',
+            'Sales Lead',
+            'Lead Engineer',
+            'Software Engineer',
+            'Account Manager',
+            'Accountant',
+            'Legal Team Lead',
+            'Lawyer'
+        ]
+        },
+        {
+        message: 'Who is the employees manager?',
+        type: 'list',
+        name: 'manager',
+        choices:
+        [
+            'None',
+            'Mark Smith',
+            'John Doe',
+            'Jane Burns',
+            'Samantha Jean',
+            'Rob Mills',
+            'Hank Stevens',
+            'Sarah Wells',
+            'Mike Horne'
+        ]
+        },
+    ]).then(function(res) {
+        db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [res.firstName, res.lastName, res.role, res.manager], function(err, data) {
+            if (err) throw err;
+            console.table('Added new employee');
+            startQuestion();
+        });
+    });
+};
 
 
 //function to update employee role 
