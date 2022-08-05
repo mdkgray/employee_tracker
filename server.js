@@ -145,6 +145,30 @@ async function viewAllRoles() {
 };
 
 // function to add role 
+async function addRole() {
+    const readDepartments = await dbQueryUtil.viewAllDepartments();
+    const departmentList = readDepartments.map(({ id, name }) => ({ name: name, value: id }));
+
+    const newRole = await inquirer.prompt([
+        {
+            message: 'What role do you want to add?',
+            type: 'input',
+            name: 'title',
+        },
+        {
+            message: 'What is the salary of the role?',
+            type: 'input',
+            name: 'salary',
+        },
+        {
+            message: 'What department does this role belong to?',
+            type: 'list',
+            name: 'department_id',
+            choices: departmentList,
+        },
+    ]);
+    await dbQueryUtil.addRole(newRole);
+};
 
 
 // function to view all departments 
