@@ -47,10 +47,10 @@ function startQuestion() {
             case 'View all employees':
                 viewAllEmployees();
                 break;
-            case 'Add an employee':
+            case 'Add employee':
                 addEmployee();
                 break;
-            case 'Delete an employee':
+            case 'Delete employee':
                 deleteEmployee();
                 break;
             case 'Update employee role':
@@ -59,19 +59,19 @@ function startQuestion() {
             case 'View all roles':
                 viewAllRoles();
                 break;
-            case 'Add a role':
+            case 'Add role':
                 addRole();
                 break;
-            case 'Delete a role':
+            case 'Delete role':
                 deleteRole();
                 break;
             case 'View all departments':
                 viewAllDepartments();
                 break;
-            case 'Add a department':
+            case 'Add department':
                 addDepartment();
                 break;
-            case 'Delete a department':
+            case 'Delete department':
                 deleteDepartment();
                 break;
             case 'Quit':
