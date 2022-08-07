@@ -46,10 +46,10 @@ function startQuestion() {
             case 'View all employees':
                 viewAllEmployees();
                 break;
-            case 'Add employee':
+            case 'Add an employee':
                 addEmployee();
                 break;
-            case 'Delete employee':
+            case 'Delete an employee':
                 deleteEmployee();
                 break;
             case 'Update employee role':
@@ -58,19 +58,19 @@ function startQuestion() {
             case 'View all roles':
                 viewAllRoles();
                 break;
-            case 'Add role':
+            case 'Add a role':
                 addRole();
                 break;
-            case 'Delete role':
+            case 'Delete a role':
                 deleteRole();
                 break;
             case 'View all departments':
                 viewAllDepartments();
                 break;
-            case 'Add department':
+            case 'Add a department':
                 addDepartment();
                 break;
-            case 'Delete department':
+            case 'Delete a department':
                 deleteDepartment();
                 break;
             case 'Quit':
@@ -97,12 +97,12 @@ async function addEmployee() {
         {
             message: 'What is the employees first name?',
             type: 'input',
-            name: 'firstName',
+            name: 'first_name',
         },
         {
             message: 'What is the employees last name?',
             type: 'input',
-            name: 'lastName',    
+            name: 'last_name',    
         },
     ]);
 
@@ -111,7 +111,7 @@ async function addEmployee() {
         {
             message: 'What is the employees role?',
             type: 'list',
-            name: 'role',
+            name: 'role_id',
             choices: roleChoices,    
         }
     ]);
@@ -122,7 +122,7 @@ async function addEmployee() {
             {
                 message: 'Who is the employees manager?',
                 type: 'list',
-                name: 'manager',
+                name: 'manager_id',
                 choices: managerChoices,         
             }
         ]);
@@ -234,7 +234,6 @@ async function addDepartment() {
         }
     ]);
     await dbQueryUtil.createDepartment(newDepartment);
-    console.log(`Added ${answers.name} to the database`);
     startQuestion();
 };
 
