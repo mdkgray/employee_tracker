@@ -49,7 +49,7 @@ class dbQueryUtil {
     createDepartment(newDepartment) {
         return this.connection.query('INSERT INTO department SET ?', newDepartment);
     }
-    deleteDepartment(id) {
+    removeDepartment(id) {
         return this.connection.query('DELETE FROM department WHERE id = ?', id);
     }
 }

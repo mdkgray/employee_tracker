@@ -1,6 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const { start } = require('repl');
 
 const db = require('./connection/connection');
 const dbUtils = require('./models/dbUtils');
@@ -238,6 +239,21 @@ async function addDepartment() {
 };
 
 // function to delete department
+async function deleteDepartment() {
+    const readDepartments = await dbQueryUtil.viewAllDepartments();
+    const departmentList = readDepartments.map(({ id, name }) => ({ name: name, value: id }));
+
+    const { department } = await inquirer.prompt([
+        {
+            message: 'What department would you like to delete?',
+            type: 'list',
+            name: 'departmentId',
+            choices: departmentList,
+        }
+    ]);
+    await dbQueryUtil.removeDepartment(department);
+    startQuestion();
+};
 
 
 app.listen(PORT, () => {
