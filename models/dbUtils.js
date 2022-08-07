@@ -4,8 +4,9 @@ class dbQueryUtil {
     constructor (connection) {
         this.connection = connection;
     }
+
     viewAllEmployees() {
-        return this.connection.query('SELECT * FROM employee');
+        return this.connection.query('SELECT employee.id, employee.first_name, employee.last_name, role.title, role.department_id, role.salary, employee.manager_id FROM employee INNER JOIN role ON employee.role_id=role.title,');
     }
     createNewEmployee(employee) {
         return this.connection.query('INSERT INTO employee SET ?', employee);
