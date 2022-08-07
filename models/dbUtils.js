@@ -22,7 +22,7 @@ class dbQueryUtil {
 
 
     viewAllRoles() {
-        return this.connection.query('SELECT id, title, salary, department_id AS role FROM role');
+        return this.connection.query('SELECT id, title, salary, department_id AS department FROM role INNER JOIN role ON role.id=department_id');
     }
     addRole(newRole) {
         return this.connection.query('INSERT INTO role SET ?', newRole);
