@@ -132,6 +132,7 @@ async function addEmployee() {
     addNewEmployee.role_id = role;
 
     await dbUtils.createNewEmployee(addNewEmployee); 
+    startQuestion();
 };
 
 //function to delete employee
@@ -148,6 +149,7 @@ async function deleteEmployee() {
         },
     ]);
     await dcQueryUtil.deleteEmployee(employee);
+    startQuestion();
 }
 
 //function to update employee role 
@@ -213,6 +215,7 @@ async function addRole() {
         },
     ]);
     await dbQueryUtil.addRole(newRole);
+    startQuestion();
 };
 
 // function to delete role
