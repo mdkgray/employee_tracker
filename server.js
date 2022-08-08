@@ -1,7 +1,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const { start } = require('repl');
+// const { start } = require('repl');
 
 const db = require('./connection/connection');
 const dbUtils = require('./models/dbUtils');
@@ -108,7 +108,6 @@ async function addEmployee() {
     ]);
 
     const roleChoices = currentRoles.map(({ id, title }) => ({ name: title, value: id }));
-    console.log(roleChoices);
 
     const role = await inquirer.prompt([
         {
@@ -120,7 +119,6 @@ async function addEmployee() {
     ]);
 
     const managerChoices = hasManager.map(({ first_name, last_name, id }) => ({ name: first_name + last_name, value: id }));
-    console.log(managerChoices);
 
     if (managerChoices && managerChoices.length > 0) {
         const manager = await inquirer.prompt([
@@ -138,7 +136,6 @@ async function addEmployee() {
                     role_id: role.role_id,
                     manager_id: res.manager_id,
                 }
-                console.log(addNewEmployee);
                 dbUtils.createNewEmployee(addNewEmployee);
             })
             .then(() => console.log(`Added new employee`))
@@ -152,7 +149,7 @@ async function deleteEmployee() {
     const employeeList = await dbQueryUtil.viewAllEmployees();
     const employeeListOptions = employeeList.map(({ id, first_name, last_name }) => ({ name: first_name + last_name, value: id }));
 
-    const { employee } = await inquirer.prompt([
+    const employee = await inquirer.prompt([
         {
             message: 'Which employee do you want to delete?',
             type: 'list',
