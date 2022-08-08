@@ -1,11 +1,9 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-// const { start } = require('repl');
 
 const db = require('./connection/connection');
-const dbUtils = require('./models/dbUtils');
-const dbQueryUtil = require('./models/dbUtils');
+const dbQueryUtil = require('./db/dbUtils');
 
 // require for console.table and dotenv
 require('console.table');
@@ -133,7 +131,7 @@ async function addEmployee() {
                     role_id: role.role_id,
                     manager_id: res.manager_id,
                 }
-                dbUtils.createNewEmployee(addNewEmployee);
+                dbQueryUtil.createNewEmployee(addNewEmployee);
             })
             .then(() => console.log(`Added new employee`))
             .then(() => startQuestion())
@@ -265,6 +263,7 @@ async function deleteDepartment() {
     startQuestion();
 };
 
+// Connection to PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
