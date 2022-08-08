@@ -21,9 +21,9 @@ class dbQueryUtil {
     updateEmployeeRole(employee, role) {
         return this.connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [ role,employee]);
     }
-    // deleteEmployee(id) {
-    //     return this.connection.query('DELETE from employee WHERE id = ?', [id]);
-    // }
+    deleteEmployee(id) {
+        return this.connection.query('DELETE from employee WHERE id = ?', id);
+    }
 
     viewAllRoles() {
         return this.connection.query(`SELECT role.id, role.title, role.salary, department.name AS department 
@@ -34,9 +34,6 @@ class dbQueryUtil {
     addRole(newRole) {
         return this.connection.query('INSERT INTO role SET ?', newRole);
     }
-    // deleteRole(id) {
-    //     return this.connection.query('DELETE FROM role WHERE id = ?', id);
-    // }
 
     viewAllDepartments() {
         return this.connection.query('SELECT * from department');

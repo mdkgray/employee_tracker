@@ -62,9 +62,6 @@ function startQuestion() {
             case 'Add role':
                 addRole();
                 break;
-            case 'Delete role':
-                deleteRole();
-                break;
             case 'View all departments':
                 viewAllDepartments();
                 break;
@@ -153,11 +150,12 @@ async function deleteEmployee() {
         {
             message: 'Which employee do you want to delete?',
             type: 'list',
-            name: 'employee',
+            name: 'id',
             choices: employeeListOptions,
         },
     ]);
-    await dbQueryUtil.deleteEmployee(employee);
+    await dbQueryUtil.deleteEmployee(employee.id);
+    console.log(`Employee deleted successfully`);
     startQuestion();
 }
 
@@ -224,11 +222,9 @@ async function addRole() {
         },
     ]);
     await dbQueryUtil.addRole(newRole);
+    console.log(`Role added successfully`);
     startQuestion();
 };
-
-// function to delete role
-
 
 // function to view all departments 
 async function viewAllDepartments() {
@@ -247,6 +243,7 @@ async function addDepartment() {
         }
     ]);
     await dbQueryUtil.createDepartment(newDepartment);
+    console.log(`Department added successfully`);
     startQuestion();
 };
 
@@ -264,6 +261,7 @@ async function deleteDepartment() {
         }
     ]);
     await dbQueryUtil.removeDepartment(department.id);
+    console.log(`Department deleted successfully`);
     startQuestion();
 };
 
