@@ -94,7 +94,7 @@ async function addEmployee() {
     const currentRoles = await dbQueryUtil.viewAllRoles();
     const hasManager = await dbQueryUtil.viewAllEmployees();
 
-    const addNewEmployee = await inquirer.prompt([
+    const employeeName = await inquirer.prompt([
         {
             message: 'What is the employees first name?',
             type: 'input',
@@ -103,36 +103,48 @@ async function addEmployee() {
         {
             message: 'What is the employees last name?',
             type: 'input',
-            name: 'last_name',    
-        },
+            name: 'last_name',
+        }
     ]);
 
     const roleChoices = currentRoles.map(({ id, title }) => ({ name: title, value: id }));
-    const { role } = await inquirer.prompt([
+    console.log(roleChoices);
+
+    const role = await inquirer.prompt([
         {
             message: 'What is the employees role?',
             type: 'list',
             name: 'role_id',
-            choices: roleChoices,    
+            choices: roleChoices,
         }
     ]);
 
     const managerChoices = hasManager.map(({ first_name, last_name, id }) => ({ name: first_name + last_name, value: id }));
+    console.log(managerChoices);
+
     if (managerChoices && managerChoices.length > 0) {
-        const { manager } = await inquirer.prompt([
+        const manager = await inquirer.prompt([
             {
                 message: 'Who is the employees manager?',
                 type: 'list',
                 name: 'manager_id',
-                choices: managerChoices,         
+                choices: managerChoices,
             }
-        ]);
-        addNewEmployee.manager_id = manager;
+        ])
+            .then(res => {
+                let addNewEmployee = {
+                    first_name: employeeName.first_name,
+                    last_name: employeeName.last_name,
+                    role_id: role.role_id,
+                    manager_id: res.manager_id,
+                }
+                console.log(addNewEmployee);
+                dbUtils.createNewEmployee(addNewEmployee);
+            })
+            .then(() => console.log(`Added new employee`))
+            .then(() => startQuestion())
+            .catch(err => console.log(err)); 
     }
-    addNewEmployee.role_id = role;
-
-    await dbUtils.createNewEmployee(addNewEmployee); 
-    startQuestion();
 };
 
 //function to delete employee
@@ -148,7 +160,7 @@ async function deleteEmployee() {
             choices: employeeListOptions,
         },
     ]);
-    await dcQueryUtil.deleteEmployee(employee);
+    await dbQueryUtil.deleteEmployee(employee);
     startQuestion();
 }
 
@@ -156,33 +168,33 @@ async function deleteEmployee() {
 async function updateEmployeeRole() {
     const employeeList = await dbQueryUtil.viewAllEmployees();
     const employeeRoles = await dbQueryUtil.viewAllRoles();
-    
+
     const employeeListOptions = employeeList.map(({ id, first_name, last_name }) => ({ name: first_name + last_name, value: id }));
 
     const employeeRolesOptions = employeeRoles.map(({ id, title }) => ({ name: title, value: id }));
 
-    const { employee } = await inquirer.prompt([
+    const employee = await inquirer.prompt([
         {
             message: 'Which employee do you want to change role?',
             type: 'list',
-            name: 'employee',
+            name: 'id',
             choices: employeeListOptions,
         },
     ]);
 
-    const { role } = await inquirer.prompt([
+    const role = await inquirer.prompt([
         {
             message: 'What role do you want to assign this employee?',
             type: 'list',
-            name: 'role',
+            name: 'role_id',
             choices: employeeRolesOptions,
         },
     ]);
 
-    await dbQueryUtil.updateEmployeeRole(employee, role);
+    await dbQueryUtil.updateEmployeeRole(employee.id, role.role_id);
     console.log(`Updated employee's role`);
     startQuestion();
-}; 
+};
 
 // function to view all roles
 async function viewAllRoles() {
@@ -223,7 +235,7 @@ async function addRole() {
 
 // function to view all departments 
 async function viewAllDepartments() {
-    const allDepartments = await dbQueryUtil.viewAllDepartments();    
+    const allDepartments = await dbQueryUtil.viewAllDepartments();
     console.table(allDepartments);
     startQuestion();
 };
@@ -246,18 +258,17 @@ async function deleteDepartment() {
     const readDepartments = await dbQueryUtil.viewAllDepartments();
     const departmentList = readDepartments.map(({ id, name }) => ({ name: name, value: id }));
 
-    const { department } = await inquirer.prompt([
+    const department = await inquirer.prompt([
         {
             message: 'What department would you like to delete?',
             type: 'list',
-            name: 'departmentId',
+            name: 'id',
             choices: departmentList,
         }
     ]);
-    await dbQueryUtil.removeDepartment(department);
+    await dbQueryUtil.removeDepartment(department.id);
     startQuestion();
 };
-
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

@@ -6,7 +6,7 @@ class dbQueryUtil {
     }
 
     viewAllEmployees() {
-        return this.connection.query(`SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager 
+        return this.connection.query(`SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, " ", m.last_name) AS manager 
         FROM employee e
         LEFT JOIN role r
           ON e.role_id = r.id
@@ -16,18 +16,14 @@ class dbQueryUtil {
           ON m.id = e.manager_id`);
     }
     createNewEmployee(employee) {
-        return this.connection.query('INSERT INTO employee SET ?', employee);
-    }
-    updateEmployee() {
-        return this.connection.query('UPDATE employee SET role_id = role_id WHERE first_name = name');
+        return this.connection.promise().query('INSERT INTO employee(first_name , last_name , role_id, manager_id ) values(?,?,?,?)', [employee.first_name,employee.last_name, employee.role_id, employee.manager_id]);
     }
     updateEmployeeRole(employee, role) {
-        return this.connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [employee, role]);
+        return this.connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [ role,employee]);
     }
-    deleteEmployee(id) {
-        return this.connection.query('DELETE from employee WHERE id = ?', [id]);
-    }
-
+    // deleteEmployee(id) {
+    //     return this.connection.query('DELETE from employee WHERE id = ?', [id]);
+    // }
 
     viewAllRoles() {
         return this.connection.query(`SELECT role.id, role.title, role.salary, department.name AS department 
@@ -38,10 +34,9 @@ class dbQueryUtil {
     addRole(newRole) {
         return this.connection.query('INSERT INTO role SET ?', newRole);
     }
-    deleteRole(id) {
-        return this.connection.query('DELETE FROM role WHERE id = ?', id);
-    }
-
+    // deleteRole(id) {
+    //     return this.connection.query('DELETE FROM role WHERE id = ?', id);
+    // }
 
     viewAllDepartments() {
         return this.connection.query('SELECT * from department');
