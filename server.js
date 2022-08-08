@@ -1,7 +1,9 @@
+// Variables for dependencies for the application
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 
+// Database variables 
 const db = require('./connection/connection');
 const dbQueryUtil = require('./db/dbUtils');
 
