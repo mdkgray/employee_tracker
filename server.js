@@ -34,7 +34,6 @@ function startQuestion() {
             'Update employee role',
             'View all roles',
             'Add role',
-            'Delete role',
             'View all departments',
             'Add department',
             'Delete department',
